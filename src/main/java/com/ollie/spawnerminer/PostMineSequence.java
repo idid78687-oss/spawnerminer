@@ -1,23 +1,17 @@
 package com.ollie.spawnerminer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import java.time.Instant;
 public class PostMineSequence {
     public static void run(MinecraftClient client, int mined) {
         new Thread(() -> {
             try {
-                client.execute(() -> client.player.networkHandler.sendPacket(
-                    new net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket(
-                        "rtp", Instant.now(), 0L, null,
-                        new net.minecraft.network.message.LastSeenMessageList.Acknowledgment(0)
-                    )
-                ));
+                client.execute(() -> client.player.sendCommand("rtp"));
                 Thread.sleep(1000);
                 int inv = countSpawners(client);
                 String msg = "PLAYER IN RADIUS SPAWNERS MINED AND IN YOUR INVENTORY [" + inv + " SPAWNERS]";
-                client.execute(() -> {
-                    client.player.networkHandler.getConnection().disconnect(Text.literal(msg));
-                });
+                client.execute(() ->
+                    client.player.networkHandler.getConnection().disconnect(Text.literal(msg))
+                );
             } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
         }, "post-mine").start();
     }
