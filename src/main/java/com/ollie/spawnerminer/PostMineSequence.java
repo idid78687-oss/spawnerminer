@@ -1,6 +1,5 @@
 package com.ollie.spawnerminer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.DisconnectionInfo;
 import net.minecraft.text.Text;
 import java.time.Instant;
 public class PostMineSequence {
@@ -16,9 +15,9 @@ public class PostMineSequence {
                 Thread.sleep(1000);
                 int inv = countSpawners(client);
                 String msg = "PLAYER IN RADIUS SPAWNERS MINED AND IN YOUR INVENTORY [" + inv + " SPAWNERS]";
-                client.execute(() -> client.getNetworkHandler().onDisconnected(
-                    new DisconnectionInfo(Text.literal(msg), null, null)
-                ));
+                client.execute(() -> {
+                    client.player.networkHandler.getConnection().disconnect(Text.literal(msg));
+                });
             } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
         }, "post-mine").start();
     }
