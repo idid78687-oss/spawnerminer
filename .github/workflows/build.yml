@@ -19,4 +19,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: spawnerminer
-          path: build/libs/spawnerminer-1.0.0.jar
+          path: build/libs/*.jar
