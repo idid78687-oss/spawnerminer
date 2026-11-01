@@ -1,11 +1,15 @@
 package com.ollie.spawnerminer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.text.Text;
 public class PostMineSequence {
     public static void run(MinecraftClient client, int mined) {
         new Thread(() -> {
             try {
-                client.execute(() -> client.player.sendCommand("rtp"));
+                client.execute(() -> {
+                    ClientPlayNetworkHandler handler = client.player.networkHandler;
+                    handler.sendChatCommand("rtp");
+                });
                 Thread.sleep(1000);
                 int inv = countSpawners(client);
                 String msg = "PLAYER IN RADIUS SPAWNERS MINED AND IN YOUR INVENTORY [" + inv + " SPAWNERS]";
